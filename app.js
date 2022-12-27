@@ -12,10 +12,11 @@ app.get('/',(req,res,next)=>{
     //read file
     fs.readFile('messagechat.txt',(err,data)=>{
 
-        if(err){
+        if(err || data.length==0){
             data='no chat exist'
         }
-        res.send(`${data}<form action="/" method="post" 
+        
+        res.send(`${data} <form action="/" method="post" 
         onSubmit="document.getElementById('username').value=localStorage.getItem('username')"> 
         <input type="hidden"  id="username" name="username"><input type="text" name="msg" placeholder="Enter message"> <br>
         <button type="submit">send</button></form>`)
@@ -28,7 +29,7 @@ app.get('/',(req,res,next)=>{
 app.post('/',(req,res,next)=>{
     const data=`${req.body.username} : ${req.body.msg}`;
     console.log(data)
-    fs.writeFile("messagechat.txt",data,{flag:'a'},(err)=>{
+    fs.writeFile("messagechat.txt",data+"\n",{flag:'a'},(err)=>{
         err? console.log(err):res.redirect('/');
     })
     
